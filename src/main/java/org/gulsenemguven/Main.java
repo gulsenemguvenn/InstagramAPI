@@ -3,9 +3,12 @@ package org.gulsenemguven;
 import java.io.IOException;
 import java.util.Scanner;
 import org.brunocvcunha.instagram4j.Instagram4j;
+import org.brunocvcunha.instagram4j.requests.InstagramGetUserFollowersRequest;
 import org.brunocvcunha.instagram4j.requests.InstagramSearchUsernameRequest;
+import org.brunocvcunha.instagram4j.requests.payload.InstagramGetUserFollowersResult;
 import org.brunocvcunha.instagram4j.requests.payload.InstagramSearchUsernameResult;
 import org.apache.http.client.ClientProtocolException;
+import org.brunocvcunha.instagram4j.requests.payload.InstagramUserSummary;
 
 public class Main
 {
@@ -13,8 +16,8 @@ public class Main
     {
 
         Scanner scanner = new Scanner(System.in);
-        String username = null;
-        String password = null;
+        String username ;
+        String password ;
 
         String menu = "1- Show Biography\n"
                 + "2- Show Follower Count\n"
@@ -50,6 +53,21 @@ public class Main
                     System.out.println("Application has been terminated.");
                 } else if (choice.equals("1")) {
                     System.out.println("Biography: " + userResult.getUser().biography);
+                }else if (choice.equals("2")) {
+                    System.out.println("Follower Count: " + userResult.getUser().follower_count);
+                } else if (choice.equals("3")) {
+                    System.out.println("Following Count: " + userResult.getUser().following_count);
+                } else if (choice.equals("4")) {
+                    System.out.println("Profile Picture URL: " + userResult.getUser().profile_pic_url);
+                } else if (choice.equals("5")) {
+                    InstagramGetUserFollowersResult followerList = instagram
+                            .sendRequest(new InstagramGetUserFollowersRequest(userResult.getUser().getPk()));
+
+                    int i = 1;
+                    for (InstagramUserSummary follower : followerList.getUsers()) {
+                        System.out.println(i + ") " + follower.full_name);
+                        i++;
+                    }
                 }
 
             } catch (ClientProtocolException e) {
